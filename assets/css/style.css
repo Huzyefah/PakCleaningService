@@ -221,30 +221,30 @@ body {
 
 .card-banner { background: var(--silver-chalice); }
 
-:is(.popular, .blog) .section-subtitle {
+:is(.testimonials, .blog) .section-subtitle {
   text-align: center;
   margin-bottom: 10px;
 }
 
-:is(.popular, .blog) .section-title {
+:is(.testimonials, .blog) .section-title {
   text-align: center;
   margin-bottom: 50px;
 }
 
-.popular-list,
+.testimonials-list,
 .blog-list {
   display: grid;
   gap: 30px;
 }
 
-.popular-card,
+.testimonials-card,
 .blog-card {
   box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.1);
   border-radius: var(--radius-6);
   overflow: hidden;
 }
 
-:is(.popular, .blog) .card-banner { position: relative; }
+:is(.testimonials, .blog) .card-banner { position: relative; }
 
 .card-badge {
   position: absolute;
@@ -264,7 +264,7 @@ body {
 
 .card-badge time { font-weight: var(--fw-700); }
 
-:is(.popular, .blog) .card-content { padding: 30px 15px; }
+:is(.testimonials, .blog) .card-content { padding: 30px 15px; }
 
 .card-wrapper {
   display: flex;
@@ -273,15 +273,15 @@ body {
   gap: 20px;
 }
 
-:is(.popular, .blog) .card-title {
+:is(.testimonials, .blog) .card-title {
   color: var(--granite-gray);
   font-size: var(--fs-5);
   margin-block: 20px;
 }
 
-:is(.popular, .blog) .card-title > a { color: inherit; }
+:is(.testimonials, .blog) .card-title > a { color: inherit; }
 
-:is(.popular, .blog) .card-title > a:is(:hover, :focus) { color: var(--viridian-green); }
+:is(.testimonials, .blog) .card-title > a:is(:hover, :focus) { color: var(--viridian-green); }
 
 
 
@@ -405,43 +405,43 @@ body {
 
 
 /*-----------------------------------*\
-  #DESTINATION
+  #SERVICES
 \*-----------------------------------*/
 
-.destination .section-subtitle {
+.services .section-subtitle {
   text-align: center;
   margin-bottom: 15px;
 }
 
-.destination .section-title {
+.services .section-title {
   text-align: center;
   margin-bottom: 60px;
 }
 
-.destination-list {
+.services-list {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
 }
 
-.destination-card {
+.services-card {
   position: relative;
   border-radius: 15px;
   overflow: hidden;
 }
 
-.destination-card::after {
+.services-card::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(hsla(222, 46%, 17%, 0), hsla(222, 46%, 17%, 0.7));
 }
 
-.destination-card img { transition: var(--transition-2); }
+.services-card img { transition: var(--transition-2); }
 
-.destination-card:is(:hover, :focus) img { transform: scale(1.1); filter: brightness(100%);}
+.services-card:is(:hover, :focus) img { transform: scale(1.1); filter: brightness(100%);}
 
-.destination-card .card-content {
+.services-card .card-content {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -450,13 +450,13 @@ body {
   z-index: 1;
 }
 
-.destination-card .card-subtitle {
+.services-card .card-subtitle {
   color: var(--mikado-yellow);
   font-family: var(--ff-comforter-brush);
   font-size: var(--fs-5);
 }
 
-.destination-card .card-title {
+.services-card .card-title {
   color: var(--white-1);
   font-family: var(--ff-abril-fatface);
 }
@@ -467,27 +467,27 @@ body {
   #POPULAR
 \*-----------------------------------*/
 
-.popular-card :is(.card-price, .card-rating) {
+.testimonials-card :is(.card-designation, .card-rating) {
   color: var(--white-1);
   font-size: var(--fs-8);
   padding: 5px 8px;
   border-radius: var(--radius-6);
 }
 
-.popular-card .card-price { background: var(--viridian-green); }
+.testimonials-card .card-designation { background: var(--viridian-green); }
 
-.popular-card .card-rating {
+.testimonials-card .card-rating {
   background: var(--mikado-yellow);
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.popular-card .card-rating ion-icon { font-size: 17px; }
+.testimonials-card .card-rating ion-icon { font-size: 17px; }
 
-.popular-card .card-rating data { margin-left: 4px; }
+.testimonials-card .card-rating data { margin-left: 4px; }
 
-.popular-card .card-location { color: var(--spanish-gray); }
+.testimonials-card .card-author { color: var(--spanish-gray); }
 
 
 
@@ -781,7 +781,7 @@ body {
     margin-inline: auto;
   }
 
-  .popular-list,
+  .testimonials-list,
   .blog-list { grid-template-columns: 1fr 1fr; }
 
 
@@ -805,14 +805,14 @@ body {
   
 
   /**
-   * DESTINATION
+   * SERVICES
    */
 
-  .destination-list > li { width: calc(33.33% - 20px); }
+  .services-list > li { width: calc(33.33% - 20px); }
 
-  .destination-list .w-50 { width: calc(50% - 20px); }
+  .services-list .w-50 { width: calc(50% - 20px); }
 
-  .destination-list {
+  .services-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center; /* Center the items horizontally */
@@ -877,7 +877,7 @@ body {
 
   .container { max-width: 980px; }
 
-  .popular-list,
+  .testimonials-list,
   .blog-list { grid-template-columns: repeat(3, 1fr); }
 
 
@@ -956,10 +956,10 @@ body {
 
 
   /**
-   * DESTINATION
+   * SERVICES
    */
 
-  .destination {
+  .services {
     --fs-4: 3.2rem;
     --fs-5: 2.6rem;
   }
@@ -1021,7 +1021,7 @@ body {
 
   .container { max-width: 1150px; }
 
-  :is(.popular, .blog) .card-content { padding: 30px; }
+  :is(.testimonials, .blog) .card-content { padding: 30px; }
 
 
 
