@@ -1,126 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Styled Form</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-        margin: 0;
-        padding: 20px;
-    }
-    form {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-    fieldset {
-        margin-bottom: 20px;
-        border: none;
-    }
-    .group1 {
-        display: none;
-    }
-    legend {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 20px;
-    }
-    label {
-        display: block;
-        margin-bottom: 10px;
-        color: #555;
-        font-size: 16px;
-    }
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    select {
-        width: calc(100% - 10px);
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-    input[type="checkbox"] {
-        margin-right: 10px;
-        transform: translateY(2px);
-    }
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 18px;
-        transition: background-color 0.3s ease;
-    }
-    input[type="submit"]:hover {
-        background-color: #45a049;
-    }
-</style>
-</head>
-<body>
-
-<form action="#" method="post">
-
-    <fieldset>
-        <legend>Checkbox Group</legend>
-        <label><input type="radio" name="option1" checked> Option 1</label>
-        <label><input type="radio" name="option1"> Option 2</label>
-        <label><input type="radio" name="option1"> Option 3</label>
-    </fieldset>
-
-    <fieldset class="group1">
-        <legend>Dropdown Group 1</legend>
-        <label for="dropdown1">Select Option:</label>
-        <select name="dropdown1" id="dropdown1">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
-        <label for="text1">Text Field:</label>
-        <input type="text" id="text1" name="text1">
-    </fieldset>
-
-    <fieldset>
-        <legend>Dropdown Group 2</legend>
-        <label for="dropdown2">Select Option:</label>
-        <select name="dropdown2" id="dropdown2">
-            <option value="option4">Option 4</option>
-            <option value="option5">Option 5</option>
-            <option value="option6">Option 6</option>
-        </select>
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date">
-        <label for="time">Time:</label>
-        <input type="time" id="time" name="time">
-    </fieldset>
-
-    <fieldset>
-        <legend>Dropdown Group 3</legend>
-        <label for="dropdown3">Select Option:</label>
-        <select name="dropdown3" id="dropdown3">
-            <option value="option7">Option 7</option>
-            <option value="option8">Option 8</option>
-            <option value="option9">Option 9</option>
-        </select>
-        <label for="text2">Text Field:</label>
-        <input type="text" id="text2" name="text2">
-    </fieldset>
-
-    <input type="submit" value="Submit">
+<html>
+  <head>
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/survey-jquery@1.10.2/survey.jquery.min.js"></script>
+    <script src="https://unpkg.com/survey-jquery@1.10.2/themes/index.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/survey-jquery@1.10.2/defaultV2.min.css" />
+  </head>
+  <body>
+    <div id="surveyElement" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
     
-</form>
-
-</body>
+    <script src="./assets/js/json.js"></script>
+    <script src="./assets/js/theme.js"></script>
+    <script src="./assets/js/index.js"></script>
+    
+  </body>
 </html>
