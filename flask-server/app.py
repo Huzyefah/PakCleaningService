@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import JSONB
 
 app = Flask(__name__)
 CORS(app)  # Allow requests from all origins
@@ -12,10 +13,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
 db = SQLAlchemy(app)
 
 # Configure email
-app.config['MAIL_SERVER'] = 'smtp.ethereal.email'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'naomi.funk60@ethereal.email'
-app.config['MAIL_PASSWORD'] = 'Z6NU6e8GWJWysaZncY'
+app.config['MAIL_USERNAME'] = 'huzyefahsaqib13@gmail.com'
+app.config['MAIL_PASSWORD'] = 'gsiadwkcxcowvqvq'
 app.config['MAIL_USE_TLS'] = True
 mail = Mail(app)
 
@@ -31,10 +32,9 @@ class Survey(db.Model):
     State = db.Column(db.String(50))
     Country = db.Column(db.String(50))
     Service = db.Column(db.String(100))
-    Frequency = db.Column(db.String(20))
-    Options = db.Column(db.String(200))
-    Time = db.Column(db.DateTime)
-    Confirmed = db.Column(db.Boolean, default=False)
+    Frequency = db.Column(JSONB)
+    Options = db.Column(JSONB)  # Use JSONB for PostgreSQL, or JSON for other databases
+    Time = db.Column(db.String(50))
 
 # Handle route for survey submission
 
@@ -44,9 +44,19 @@ def submit_survey():
         survey_data = request.json
         print('Processing survey data:', survey_data)
 
-        # Transform keys to match model schema and handle date format
-        survey_data['Time'] = datetime.strptime(survey_data['Time'], '%Y-%m-%dT%H:%M')
-        survey_data.pop('Time')
+        # Set 'Frequency' to empty string if not available
+        frequency = survey_data.get('Frequency', '')
+
+        # Set 'Frequency' to empty string if not available
+        apt = survey_data.get('Apt', '')
+
+        # Set 'Options' to empty list if not available
+        options = survey_data.get('Options', [])
+
+        # Update survey data with the modified 'Frequency' and 'Options'
+        survey_data['Frequency'] = frequency
+        survey_data['Options'] = options
+        survey_data['Apt'] = apt
 
         # Create Survey object with transformed data
         survey = Survey(**survey_data)
@@ -61,40 +71,72 @@ def submit_survey():
         print('Error submitting survey:', e)
         return jsonify(error='Internal server error'), 500
 
-# Handle route for confirming booking
-@app.route('/confirm-booking/<int:booking_id>', methods=['GET'])
-def confirm_booking(booking_id):
-    try:
-        # Get the booking from the database
-        survey = Survey.query.get(booking_id)
-        if survey:
-            # Update booking status to confirmed
-            survey.Confirmed = True
-            db.session.commit()
-            
-            # Send confirmation emails to client and business
-            send_confirmation_emails(survey)
-            return render_template('booking_confirmed.html')
-        else:
-            return render_template('booking_not_found.html')
-    except Exception as e:
-        print('Error confirming booking:', e)
-        return render_template('error.html')
+
 
 # Function to send confirmation emails
 def send_confirmation_emails(data):
-    # Send confirmation email to client
-    msg1 = Message('Survey Submission Confirmation',
-                   sender='paakcleaningservice@gmail.com',
+    msg1 = Message('Booking Confirmation',
+                   sender='huzyefahsaqib13@gmail.com',
                    recipients=[data['Email']])
-    msg1.html = render_template('client_confirmation_email.html', name=data['Name'])
+    msg1.html = f"""
+    <p>Dear {data['Name']},</p>
+    <p>Thank you for booking with Paak Cleaning Service! Your booking details are confirmed as follows:</p>
+    <table>
+      <tr>
+        <th>Name</th>
+        <td>{data['Name']}</td>
+      </tr>
+      <tr>
+        <th>Service</th>
+        <td>{data['Service']}</td>
+      </tr>
+      <tr>
+        <th>Date & Time</th>
+        <td>{data['Time']}</td>
+      </tr>
+    </table>
+    <p>We will be contacting you shortly to confirm any additional details.</p>
+    <p>If you have any questions, please don't hesitate to contact us.</p>
+    <p>Best regards,</p>
+    <p>Paak Cleaning Service</p>
+    """
     mail.send(msg1)
 
-    # Send confirmation email to business
-    msg2 = Message('New Survey Submission',
-                   sender='paakcleaningservice@gmail.com',
-                   recipients=['paakcleaningservice@gmail.com'])
-    msg2.html = render_template('business_confirmation_email.html', data=data)
+# Send confirmation email to business
+    msg2 = Message('New Booking Submission',
+                  sender='huzyefahsaqib13@gmail.com',
+                  recipients=['paakcleaningservice@gmail.com'])
+    msg2.html = f"""
+    <p>New booking submission:</p>
+    <table>
+        <tr>
+        <th>Name</th>
+        <td>{data['Name']}</td>
+        </tr>
+        <tr>
+        <th>Email</th>
+        <td>{data['Email']}</td>
+        </tr>
+        <tr>
+        <th>Phone</th>
+        <td>{data['Phone'] if data['Phone'] else 'N/A'}</td>  
+        </tr>
+        <tr>
+        <th>Address</th>
+        <td>Apt: {data['Apt']}<br>{data['Address']}</td>  
+        </tr>
+        <tr>
+        <th>Service</th>
+        <td>{data['Service']}</td>
+        <td><br>{', '.join(data['Options']) if data['Options'] else ' '}</td>
+        <td>{', '.join(data['Frequency']) if data['Frequency'] else ' '}</td>
+        </tr>
+        <tr>
+        <th>Date & Time</th>
+        <td>{data['Time']}</td>
+        </tr>
+    </table>
+    """
     mail.send(msg2)
 
 # Start the server
