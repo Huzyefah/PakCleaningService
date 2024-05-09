@@ -182,11 +182,6 @@ const json = {
       }
     ],
     "showCompletedPage": true,
-    "navigateToUrlOnCondition": [
-      {
-        "url": "index.html"
-      }
-    ],
     "showQuestionNumbers": "off",
     "questionErrorLocation": "bottom",
     "showProgressBar": "auto",
