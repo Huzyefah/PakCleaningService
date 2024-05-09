@@ -4,12 +4,12 @@ survey.onComplete.add((sender, options) => {
     const data = sender.data;
     console.log('Survey data:', data); // Debugging statement
     submitSurvey(data);
-});
+ });
 
 const submitSurvey = async (data) => {
     try {
         console.log('Submitting survey data:', data); // Debugging statement
-        const response = await fetch('/submit-survey', { // <-- Ensure the URL is correct here
+        const response = await fetch('http://127.0.0.1:5000/submit-survey', { // <-- Ensure the URL is correct here
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,3 +27,5 @@ const submitSurvey = async (data) => {
 };
 
 $("#surveyElement").Survey({ model: survey });
+
+

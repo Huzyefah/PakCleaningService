@@ -27,7 +27,7 @@ const json = {
           },
           {
             "type": "text",
-            "name": "Phone Number",
+            "name": "Phone",
             "title": "Phone Number",
             "isRequired": true,
             "inputType": "tel",
