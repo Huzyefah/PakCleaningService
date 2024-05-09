@@ -65,8 +65,8 @@ def submit_survey():
 # Function to send confirmation emails
 def send_confirmation_emails(data):
     # Send confirmation email to client
-    msg1 = Message('Booking Confirmation',
-                   sender='Paak Cleaning Service',
+    msg1 = Message('Survey Submission Confirmation',
+                   sender='your_business@example.com',
                    recipients=[data['Email']])
     msg1.html = f"""
         <p>Dear {data['Name']},</p>
@@ -78,9 +78,9 @@ def send_confirmation_emails(data):
     mail.send(msg1)
 
     # Send confirmation email to business
-    msg2 = Message('New Booking',
-                   sender='Paak Cleaning Service',
-                   recipients=[data['Name']])
+    msg2 = Message('New Survey Submission',
+                   sender='your_business@example.com',
+                   recipients=['business_email@example.com'])
     msg2.html = f"""
         <p>New survey submission:</p>
         <pre>{data}</pre>
