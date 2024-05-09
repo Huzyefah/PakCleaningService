@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_mail import Mail, Message
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -34,7 +34,7 @@ class Survey(db.Model):
     Frequency = db.Column(db.String(20))
     Options = db.Column(db.String(200))
     Time = db.Column(db.DateTime)
-
+    Confirmed = db.Column(db.Boolean, default=False)
 
 # Handle route for survey submission
 
@@ -61,30 +61,40 @@ def submit_survey():
         print('Error submitting survey:', e)
         return jsonify(error='Internal server error'), 500
 
+# Handle route for confirming booking
+@app.route('/confirm-booking/<int:booking_id>', methods=['GET'])
+def confirm_booking(booking_id):
+    try:
+        # Get the booking from the database
+        survey = Survey.query.get(booking_id)
+        if survey:
+            # Update booking status to confirmed
+            survey.Confirmed = True
+            db.session.commit()
+            
+            # Send confirmation emails to client and business
+            send_confirmation_emails(survey)
+            return render_template('booking_confirmed.html')
+        else:
+            return render_template('booking_not_found.html')
+    except Exception as e:
+        print('Error confirming booking:', e)
+        return render_template('error.html')
 
 # Function to send confirmation emails
 def send_confirmation_emails(data):
     # Send confirmation email to client
     msg1 = Message('Survey Submission Confirmation',
-                   sender='your_business@example.com',
+                   sender='paakcleaningservice@gmail.com',
                    recipients=[data['Email']])
-    msg1.html = f"""
-        <p>Dear {data['Name']},</p>
-        <p>Thank you for submitting the booking form. Your booking has been received.</p>
-        <p>We will contact you shortly to confirm the details.</p>
-        <p>Best regards,</p>
-        <p>Paak Cleaning Service</p>
-    """
+    msg1.html = render_template('client_confirmation_email.html', name=data['Name'])
     mail.send(msg1)
 
     # Send confirmation email to business
     msg2 = Message('New Survey Submission',
-                   sender='your_business@example.com',
-                   recipients=['business_email@example.com'])
-    msg2.html = f"""
-        <p>New survey submission:</p>
-        <pre>{data}</pre>
-    """
+                   sender='paakcleaningservice@gmail.com',
+                   recipients=['paakcleaningservice@gmail.com'])
+    msg2.html = render_template('business_confirmation_email.html', data=data)
     mail.send(msg2)
 
 # Start the server
