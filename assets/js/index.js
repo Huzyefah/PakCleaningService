@@ -26,6 +26,7 @@ const submitSurvey = async (data) => {
     }
 };
 
+
 $("#surveyElement").Survey({ model: survey });
 
 
