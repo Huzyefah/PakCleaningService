@@ -1,7 +1,7 @@
 const json = {
     "title": "Paak Cleaning Service",
     "description": "Edmonton, AB     (647)-206-5523",
-    "logo": "./assets/images/logo-green.png",
+    "logo": "./assets/images/logo-white .png",
     "logoWidth": "auto",
     "logoHeight": "100",
     "logoFit": "fill",
