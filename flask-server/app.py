@@ -105,7 +105,7 @@ def send_confirmation_emails(data):
 # Send confirmation email to business
     msg2 = Message('New Booking Submission',
                   sender='huzyefahsaqib13@gmail.com',
-                  recipients=['paakcleaningservice@gmail.com'])
+                  recipients=['huzyefahsaqib13@gmail.com'])
     msg2.html = f"""
     <p>New booking submission:</p>
     <table>
