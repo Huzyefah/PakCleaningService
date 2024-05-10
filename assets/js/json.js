@@ -118,6 +118,10 @@ const json = {
                 "text": "Pressure Washing Driveways / Sidewalks ($35)"
               },
               {
+                "value": "Carpet Cleaning",
+                "text": "Carpet Cleaning ($35)"
+              },
+              {
                 "value": "Iron Service ",
                 "text": "Iron Service (More Options)"
               }

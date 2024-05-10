@@ -608,9 +608,10 @@ body {
 }
 
 .footer-text {
-  font-size: 2em;
+  font-size: 1.5em;
   padding-block: 5px;
   text-align: center;
+  text-wrap: nowrap;
 }
 .social-list {
   display: flex;
@@ -703,6 +704,7 @@ body {
    */
 
   .footer-top { grid-template-columns: 1fr 1fr; }
+  .footer-text { font-size: 2em; }
 
 }
 
