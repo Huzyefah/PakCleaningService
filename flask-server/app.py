@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
-from flask_mail import Mail, Message
+from flask import Flask, request, jsonify, render_template
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -12,13 +13,8 @@ CORS(app)  # Allow requests from all origins
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
 db = SQLAlchemy(app)
 
-# Configure email
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'huzyefahsaqib13@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gsiadwkcxcowvqvq'
-app.config['MAIL_USE_TLS'] = True
-mail = Mail(app)
+# Configure SendGrid
+app.config['SENDGRID_API_KEY'] = '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'
 
 # Define schema for survey submissions
 class Survey(db.Model):
@@ -37,7 +33,6 @@ class Survey(db.Model):
     Time = db.Column(db.String(50))
 
 # Handle route for survey submission
-
 @app.route('/submit-survey', methods=['POST'])
 def submit_survey():
     try:
@@ -65,82 +60,63 @@ def submit_survey():
         db.session.add(survey)
         db.session.commit()
 
-        send_confirmation_emails(survey_data)
+        # send_confirmation_emails(survey_data)
         return jsonify(message='Survey submitted successfully!'), 201
     except Exception as e:
         print('Error submitting survey:', e)
         return jsonify(error='Internal server error'), 500
 
-
-
 # Function to send confirmation emails
 def send_confirmation_emails(data):
-    msg1 = Message('Booking Confirmation',
-                   sender='huzyefahsaqib13@gmail.com',
-                   recipients=[data['Email']])
-    msg1.html = f"""
-    <p>Dear {data['Name']},</p>
-    <p>Thank you for booking with Paak Cleaning Service! Your booking details are confirmed as follows:</p>
-    <table>
-      <tr>
-        <th>Name</th>
-        <td>{data['Name']}</td>
-      </tr>
-      <tr>
-        <th>Service</th>
-        <td>{data['Service']}</td>
-      </tr>
-      <tr>
-        <th>Date & Time</th>
-        <td>{data['Time']}</td>
-      </tr>
-    </table>
-    <p>We will be contacting you shortly to confirm any additional details.</p>
-    <p>If you have any questions, please don't hesitate to contact us.</p>
-    <p>Best regards,</p>
-    <p>Paak Cleaning Service</p>
-    """
-    mail.send(msg1)
+    try:
+        # Create SendGrid message for user
+        message_user = Mail(
+            from_email='huzyefahsaqib13@gmail.com',
+            to_emails=data['Email'],
+            subject='Booking Confirmation',
+            html_content=f"""
+            <p>Dear {data['Name']},</p>
+            <p>Thank you for booking with Paak Cleaning Service! Your booking details are confirmed as follows:</p>
+            <table>
+              <tr>
+                <th>Name</th>
+                <td>{data['Name']}</td>
+              </tr>
+              <tr>
+                <th>Service</th>
+                <td>{data['Service']}</td>
+              </tr>
+              <tr>
+                <th>Date & Time</th>
+                <td>{data['Time']}</td>
+              </tr>
+            </table>
+            <p>We will be contacting you shortly to confirm any additional details.</p>
+            <p>If you have any questions, please don't hesitate to contact us.</p>
+            <p>Best regards,</p>
+            <p>Paak Cleaning Service</p>
+            """
+        )
 
-# Send confirmation email to business
-    msg2 = Message('New Booking Submission',
-                  sender='huzyefahsaqib13@gmail.com',
-                  recipients=['huzyefahsaqib13@gmail.com'])
-    msg2.html = f"""
-    <p>New booking submission:</p>
-    <table>
-        <tr>
-        <th>Name</th>
-        <td>{data['Name']}</td>
-        </tr>
-        <tr>
-        <th>Email</th>
-        <td>{data['Email']}</td>
-        </tr>
-        <tr>
-        <th>Phone</th>
-        <td>{data['Phone'] if data['Phone'] else 'N/A'}</td>  
-        </tr>
-        <tr>
-        <th>Address</th>
-        <td>Apt: {data['Apt']}<br>{data['Address']}</td>  
-        </tr>
-        <tr>
-        <th>Service</th>
-        <td>{data['Service']}</td>
-        <td><br>{', '.join(data['Options']) if data['Options'] else ' '}</td>
-        <td>{', '.join(data['Frequency']) if data['Frequency'] else ' '}</td>
-        </tr>
-        <tr>
-        <th>Date & Time</th>
-        <td>{data['Time']}</td>
-        </tr>
-    </table>
-    """
-    mail.send(msg2)
+        # Initialize SendGrid client
+        sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
+
+        # Send emails
+        response_user = sg.send(message_user)
+
+        print("User email sent with status code:", response_user.status_code)
+    except Exception as e:
+        print('Error sending confirmation emails:', e)
+
+@app.route('/survey-data')
+def survey_data():
+    surveys = Survey.query.all()
+    print(surveys)
+    return render_template('db.html', surveys=surveys)
 
 # Start the server
 if __name__ == '__main__':
+    print('Starting server...')
     with app.app_context():
         # Create all database tables
         db.create_all()
