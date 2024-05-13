@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
 db = SQLAlchemy(app)
 
 # Configure SendGrid
-app.config['SENDGRID_API_KEY'] = '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'
+app.config['SENDGRID_API_KEY'] = 'dummy'
 
 # Define schema for survey submissions
 class Survey(db.Model):
