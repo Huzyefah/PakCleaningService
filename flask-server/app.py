@@ -31,6 +31,8 @@ class Survey(db.Model):
     Frequency = db.Column(JSONB)
     Options = db.Column(JSONB)  # Use JSONB for PostgreSQL, or JSON for other databases
     Time = db.Column(db.String(50))
+    Pets = db.Column(db.String(50))
+    LookingForward = db.Column(db.String(200))
 
 # Handle route for survey submission
 @app.route('/submit-survey', methods=['POST'])
@@ -48,10 +50,13 @@ def submit_survey():
         # Set 'Options' to empty list if not available
         options = survey_data.get('Options', [])
 
+        lookingforward = survey_data.get('LookingForward', '')
+
         # Update survey data with the modified 'Frequency' and 'Options'
         survey_data['Frequency'] = frequency
         survey_data['Options'] = options
         survey_data['Apt'] = apt
+        survey_data['LookingForward'] = lookingforward
 
         # Create Survey object with transformed data
         survey = Survey(**survey_data)
@@ -107,6 +112,10 @@ def send_confirmation_emails(data):
         print("User email sent with status code:", response_user.status_code)
     except Exception as e:
         print('Error sending confirmation emails:', e)
+
+    
+    
+
 
 @app.route('/survey-data')
 def survey_data():
