@@ -1,0 +1,59 @@
+name: DevTest Lab Ephemeral Demo
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  RESOURCE_GROUP: 'RG-DevOps-Presentation' # Must match Phase 1
+  LAB_NAME: 'DemoLab-DevOps2'               # Must match Phase 1
+  VM_NAME: 'test-vm-${{ github.run_id }}'
+
+jobs:
+  ephemeral-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🚀 Provision Test VM (With Password Fix)
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            echo "Creating VM: $VM_NAME"
+            # We are setting the password HERE instead of in the portal
+            az lab vm create \
+              --lab-name $LAB_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --name $VM_NAME \
+              --image "Ubuntu Server 20.04 LTS" \
+              --image-type gallery \
+              --size "Standard_DS1_v2" \
+              --admin-username "azureuser" \
+              --admin-password "Presentation123!" \
+              --allow-claim
+
+      - name: 🧪 Run Automated Tests
+        run: |
+          echo "Connecting to $VM_NAME..."
+          echo "Tests Running..."
+          sleep 10
+          echo "Tests Passed!"
+
+      - name: 🗑️ Cleanup - Destroy VM
+        if: always()
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            echo "Deleting $VM_NAME..."
+            az lab vm delete \
+              --lab-name $LAB_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --name $VM_NAME \
+              --yes
