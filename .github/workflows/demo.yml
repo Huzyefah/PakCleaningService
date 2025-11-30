@@ -34,7 +34,7 @@ jobs:
               --name $VM_NAME \
               --image "Ubuntu Server 22.04 LTS" \
               --image-type gallery \
-              --size "Standard_DS1_v2" \
+              --size "Standard_DS2_v2" \
               --admin-username "azureuser" \
               --admin-password "Presentation123!" \
               --allow-claim
