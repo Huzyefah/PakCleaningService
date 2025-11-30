@@ -32,7 +32,7 @@ jobs:
               --lab-name $LAB_NAME \
               --resource-group $RESOURCE_GROUP \
               --name $VM_NAME \
-              --image "Ubuntu Server 20.04 LTS" \
+              --image "Ubuntu Server 20.04 LTS- Gen2" \
               --image-type gallery \
               --size "Standard_DS1_v2" \
               --admin-username "azureuser" \
